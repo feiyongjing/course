@@ -3,7 +3,10 @@ package com.github.eric.course.model;
 public class HttpException extends RuntimeException {
     private int statusCode;
     private String massage;
+
     public HttpException(int statusCode, String massage) {
+        this.statusCode = statusCode;
+        this.massage = massage;
     }
 
     public int getStatusCode() {

@@ -1,5 +1,7 @@
 package com.github.eric.course.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -34,6 +36,7 @@ public class User extends BaseEntity{
     }
 
     @Column(name = "encrypted_password")
+    @JsonIgnore
     public String getEncrypted_password() {
         return encrypted_password;
     }

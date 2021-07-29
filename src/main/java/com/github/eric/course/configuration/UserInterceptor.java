@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.stream.Stream;
 
 public class UserInterceptor implements HandlerInterceptor {
-    private static String COOKIE_NAME="COURSE_APP_SESSION_ID";
+    public static String COOKIE_NAME="COURSE_APP_SESSION_ID";
     @Autowired
     private SessionDao sessionDao;
     @Override
@@ -23,7 +23,7 @@ public class UserInterceptor implements HandlerInterceptor {
                 .flatMap(sessionDao::findByCookie)
                 .map(Session::getUser)
                 .ifPresent(UserContext::setCurrentUser);
-        return false;
+        return true;
     }
 
 

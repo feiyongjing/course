@@ -13,7 +13,7 @@ public class BaseEntity {
     private Integer id;
     private Date createdAt;
     private Date updatedAt;
-    private Status status;
+    private Status status=Status.OK;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
