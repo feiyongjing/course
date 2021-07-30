@@ -8,7 +8,9 @@ create table user_role
     status varchar(10) not null default 'ok'
 );
 
-insert into user_role(id, user_id, role_id) values
+insert into user_role(id,user_id, role_id) values
 (1,1,1),
 (2,2,2),
 (3,3,3);
+
+alter sequence user_role_id_seq restart with 4;

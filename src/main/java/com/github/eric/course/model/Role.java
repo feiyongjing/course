@@ -1,5 +1,7 @@
 package com.github.eric.course.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -9,12 +11,13 @@ public class Role extends BaseEntity {
     private String name;
     private Set<Permission> permissions;
 
-    @OneToMany(fetch= FetchType.EAGER)
+    @OneToMany
     @JoinTable(
             name = "permission",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "id")
     )
+    @JsonIgnore
     public Set<Permission> getPermissions() {
         return permissions;
     }

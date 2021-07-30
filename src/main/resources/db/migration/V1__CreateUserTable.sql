@@ -10,9 +10,9 @@ create table "user"
 
 -- status 表示数据的状态 ok 和 deleted
 
-insert into "user"(username,encrypted_password) values
-('张三',''),
-('李四',''),
-('王五','');
+insert into "user"(id,username,encrypted_password) values
+(1,'张三',''),
+(2,'李四',''),
+(3,'王五','');
 
--- alter sequence id_seq restrict with 4;
+alter sequence user_id_seq restart with 4;

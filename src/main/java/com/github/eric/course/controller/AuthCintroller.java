@@ -1,18 +1,23 @@
 package com.github.eric.course.controller;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import ch.qos.logback.classic.spi.EventArgUtil;
 import com.github.eric.course.configuration.UserContext;
+import com.github.eric.course.configuration.UserInterceptor;
 import com.github.eric.course.dao.SessionDao;
-import com.github.eric.course.dao.UserRepository;
+import com.github.eric.course.dao.UserDao;
 import com.github.eric.course.model.HttpException;
 import com.github.eric.course.model.Session;
 import com.github.eric.course.model.User;
+import com.github.eric.course.service.UserRoleManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.UUID;
 
 import static com.github.eric.course.configuration.UserInterceptor.COOKIE_NAME;
@@ -22,33 +27,49 @@ import static com.github.eric.course.configuration.UserInterceptor.COOKIE_NAME;
 public class AuthCintroller {
     @Autowired
     private SessionDao sessionDao;
-    private BCrypt.Verifyer verify=BCrypt.verifyer();
     @Autowired
-    private UserRepository userRepository;
+    private UserRoleManagerService userRoleManagerService;
+
+    private BCrypt.Verifyer verify = BCrypt.verifyer();
+    @Autowired
+    private UserDao userDao;
+
+    @GetMapping("/admin/users")
+    public List<User> getAllUsers() {
+        return userRoleManagerService.getAllUsers();
+    }
 
     @GetMapping("/session")
     public Session authStatus() {
-        User currentuser = UserContext.getCurrentUser();
-        if (currentuser == null) {
-            throw new HttpException(401, "Unauthorized");
+        User currentUser = UserContext.getCurrentUser();
+        if (currentUser == null) {
+            throw new HttpException(401, "用户未登录");
         }
         Session session = new Session();
-        session.setUser(currentuser);
+        session.setUser(currentUser);
         return session;
 
     }
 
     @PostMapping("/session")
-    public User login(@RequestParam String username, @RequestParam String password,HttpServletResponse response) {
+    public User login(@RequestParam String username, @RequestParam String password, HttpServletResponse response) {
         checkParam(username, password);
 
-        User user = userRepository.findByUsername(username);
+        User user = userDao.findByUsername(username);
         if (user == null) {
             throw new HttpException(401, "用户不存在");
         } else {
-            if (verify.verify(password.toCharArray(), user.getEncrypted_password()).verified){
+            if (verify.verify(password.toCharArray(), user.getEncrypted_password()).verified) {
+
                 String cookie = UUID.randomUUID().toString();
-                response.addCookie(new Cookie(COOKIE_NAME,cookie));
+
+                Session session = new Session();
+                session.setCookie(cookie);
+                session.setUser(user);
+                sessionDao.save(session);
+
+                response.addCookie(new Cookie(COOKIE_NAME, cookie));
+
                 return user;
             }
             throw new HttpException(401, "用户名密码不匹配");
@@ -56,9 +77,20 @@ public class AuthCintroller {
 
     }
 
-    //    public User logout(){
-//
-//    }
+    @DeleteMapping("/session")
+    @Transactional
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        if (UserContext.getCurrentUser() == null) {
+            throw new HttpException(401, "用户未登录");
+        }
+
+        UserInterceptor.getCookie(request).ifPresent(sessionDao::deleteByCookie);
+        Cookie cookie = new Cookie(COOKIE_NAME, "");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        response.setStatus(204);
+    }
+
     @PostMapping("/user")
     public User register(@RequestParam String username, @RequestParam String password, HttpServletResponse response) {
         checkParam(username, password);
@@ -66,9 +98,13 @@ public class AuthCintroller {
         user.setUsername(username);
         user.setEncrypted_password(BCrypt.withDefaults().hashToString(12, password.toCharArray()));
         try {
-            userRepository.save(user);
-        } catch (Exception e) {
-            throw new HttpException(409, "该用户以及注册了");
+            userDao.save(user);
+        } catch (Throwable e) {
+            if (e instanceof DataIntegrityViolationException) {
+                throw new HttpException(409, "该用户以及注册了");
+            } else {
+                throw new RuntimeException(e);
+            }
         }
         response.setStatus(201);
         return user;

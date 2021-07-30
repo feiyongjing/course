@@ -4,19 +4,25 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "session", schema = "public")
-public class Session extends BaseEntity{
-    private Integer userId;
+public class Session {
+    private Integer id;
     private String cookie;
     private User user;
 
-    @Column(name = "user_id")
-    public Integer getUserId() {
-        return userId;
+    public Session() {
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    public Integer getId() {
+        return id;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
 
     @Column(name = "cookie")
     public String getCookie() {
@@ -27,11 +33,10 @@ public class Session extends BaseEntity{
         this.cookie = cookie;
     }
 
-    @OneToOne(fetch= FetchType.EAGER)
-    @JoinTable(
-            name = "user",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(
+            name = "user_id",
+            referencedColumnName = "id"
     )
     public User getUser() {
         return user;

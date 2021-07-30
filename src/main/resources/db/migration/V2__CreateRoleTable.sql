@@ -7,7 +7,9 @@ create table role
     status varchar(10) not null default 'ok'
 );
 
-insert into role(id, name) values
+insert into role(id,name) values
 (1,'学生'),
 (2,'老师'),
 (3,'管理员');
+
+alter sequence role_id_seq restart with 4;
