@@ -27,21 +27,13 @@ import static com.github.eric.course.configuration.UserInterceptor.COOKIE_NAME;
 public class AuthController {
     @Autowired
     private SessionDao sessionDao;
-    @Autowired
-    private UserRoleManagerService userRoleManagerService;
+
 
     private BCrypt.Verifyer verify = BCrypt.verifyer();
     @Autowired
     private UserDao userDao;
 
-    /**
-     * 管理员查看所有的用户
-     * @return 所有的用户
-     */
-    @GetMapping("/admin/users")
-    public List<User> getAllUsers() {
-        return userRoleManagerService.getAllUsers();
-    }
+
 
     /**
      * @api {get} /api/v1/session 检查登录状态
@@ -241,7 +233,7 @@ public class AuthController {
 
     }
 
-    private void checkParam(@RequestParam String username, @RequestParam String password) {
+    public static void checkParam(@RequestParam String username, @RequestParam String password) {
         if (username == null || username.length() > 8 || password.length() < 1) {
             throw new HttpException(400, "用户名格式不对");
         }
