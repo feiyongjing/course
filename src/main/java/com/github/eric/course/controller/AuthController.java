@@ -233,7 +233,7 @@ public class AuthController {
 
     }
 
-    public static void checkParam(@RequestParam String username, @RequestParam String password) {
+    private static void checkParam(@RequestParam String username, @RequestParam String password) {
         if (username == null || username.length() > 8 || password.length() < 1) {
             throw new HttpException(400, "用户名格式不对");
         }

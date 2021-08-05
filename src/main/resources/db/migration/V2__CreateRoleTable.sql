@@ -9,7 +9,7 @@ create table role
 
 insert into role(id,name) values
 (1,'学生'),
-(2,'老师'),
+(2,'教师'),
 (3,'管理员');
 
 alter sequence role_id_seq restart with 4;

@@ -6,16 +6,16 @@ import com.github.eric.course.model.Role;
 import com.github.eric.course.model.User;
 import com.github.eric.course.service.UserRoleManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.Arrays;
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/api/v1")
-public class UserManageController {
+public class UserController {
     @Autowired
     private UserRoleManagerService userRoleManagerService;
 
@@ -25,22 +25,34 @@ public class UserManageController {
      * @return 所有的用户
      */
     @GetMapping("/user")
-    public PageResponse<User> getAllUsers(@RequestParam("pagesize") Integer pageSize,
-                                   @RequestParam("pagenum") Integer pageNum,
-                                   @RequestParam("orderby") Integer orderBy,
-                                   @RequestParam("ordertype") Integer orderType) {
-        return userRoleManagerService.getAllUsers(pageSize,pageNum,orderBy,orderType);
+    public PageResponse<User> getAllUsers(@RequestParam(value = "search", required = false) String search,
+                                          @RequestParam(value = "pagesize", required = false) Integer pageSize,
+                                          @RequestParam(value = "pagenum", required = false) Integer pageNum,
+                                          @RequestParam(value = "orderby", required = false) String orderBy,
+                                          @RequestParam(value = "ordertype", required = false) String orderType) {
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        if (pageNum == null) {
+            pageNum = 1;
+        }
+        if (orderType != null && orderBy == null) {
+            throw new HttpException(400, "缺少orderBy!");
+        }
+
+        return userRoleManagerService.getAllUsers(search,pageSize, pageNum, orderBy, orderType == null ? null : Sort.Direction.fromString(orderType));
     }
 
     /**
      * 更新用户权限，需要管理员权限
+     *
      * @param user
      * @return
      */
-    @PatchMapping("/user")
-    public User updateUser(@RequestBody User user) {
+    @PatchMapping("/user/{id}")
+    public User updateUser(@PathVariable Integer id,@RequestBody User user) {
         clear(user);
-        return userRoleManagerService.updateUser(user);
+        return userRoleManagerService.updateUser(id,user);
     }
 
     /**
@@ -48,10 +60,10 @@ public class UserManageController {
      *
      * @return 用户信息
      */
-    @GetMapping("/user")
-    public User getUserById(@PathParam("id") Integer userId) {
-        if(userId==null){
-            throw new HttpException(400,"Bad request");
+    @GetMapping("/user/{id}")
+    public User getUserById(@PathVariable("id") Integer userId) {
+        if (userId == null) {
+            throw new HttpException(400, "Bad request");
         }
         return userRoleManagerService.getUserById(userId);
     }
@@ -62,7 +74,7 @@ public class UserManageController {
                 user.getRoles().size() == 0 ||
                 !user.getRoles().stream().allMatch(this::checkRoles)
         ) {
-            throw new HttpException(400,"Bad request");
+            throw new HttpException(400, "Bad request");
         }
     }
 

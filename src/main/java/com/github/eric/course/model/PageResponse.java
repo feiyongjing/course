@@ -8,6 +8,16 @@ public class PageResponse <T> {
     private Integer  pageNum;
     private List<T> date;
 
+    public PageResponse() {
+    }
+
+    public PageResponse(Integer totalPage, Integer pageSize, Integer pageNum, List<T> date) {
+        this.totalPage = totalPage;
+        this.pageSize = pageSize;
+        this.pageNum = pageNum;
+        this.date = date;
+    }
+
     public Integer getTotalPage() {
         return totalPage;
     }
