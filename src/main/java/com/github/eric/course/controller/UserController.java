@@ -26,10 +26,10 @@ public class UserController {
      */
     @GetMapping("/user")
     public PageResponse<User> getAllUsers(@RequestParam(value = "search", required = false) String search,
-                                          @RequestParam(value = "pagesize", required = false) Integer pageSize,
-                                          @RequestParam(value = "pagenum", required = false) Integer pageNum,
-                                          @RequestParam(value = "orderby", required = false) String orderBy,
-                                          @RequestParam(value = "ordertype", required = false) String orderType) {
+                                          @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                          @RequestParam(value = "pageNum", required = false) Integer pageNum,
+                                          @RequestParam(value = "orderBy", required = false) String orderBy,
+                                          @RequestParam(value = "orderType", required = false) String orderType) {
         if (pageSize == null) {
             pageSize = 10;
         }
@@ -69,8 +69,7 @@ public class UserController {
     }
 
     public void clear(User user) {
-        if (user.getId() == null ||
-                user.getRoles() == null ||
+        if (user.getRoles() == null ||
                 user.getRoles().size() == 0 ||
                 !user.getRoles().stream().allMatch(this::checkRoles)
         ) {

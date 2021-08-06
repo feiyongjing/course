@@ -15,9 +15,6 @@ public class AdminAopAspect {
     @Around("@annotation(com.github.eric.course.annotation.Admin)")
     public Object checkPermission(ProceedingJoinPoint joinPoint) throws Throwable {
         User currentUser = UserContext.getCurrentUser();
-        if(currentUser==null){
-            throw new HttpException(401,"用户没有登录");
-        }
         if(currentUser.getRoles()!=null &&
         currentUser.getRoles().stream().anyMatch(role -> "管理员".equals(role.getName()))){
             return joinPoint.proceed();

@@ -3,6 +3,7 @@ package com.github.eric.course;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.configuration.ClassicConfiguration;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Map;
 
+import static com.github.eric.course.configuration.UserInterceptor.COOKIE_NAME;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @ExtendWith(SpringExtension.class)
@@ -30,6 +33,9 @@ public class AbstractIntegrationTest {
 
     public ObjectMapper objectMapper = new ObjectMapper();
     public HttpClient client = HttpClient.newHttpClient();
+    static final String pupilsUserCookie = COOKIE_NAME + "=pupils";
+    static final String teacherUserCookie = COOKIE_NAME + "=teacher";
+    static final String adminUserCookie = COOKIE_NAME + "=admin";
 
     @Value("${spring.datasource.url}")
     public String databaseUrl;
@@ -51,32 +57,59 @@ public class AbstractIntegrationTest {
     public String getPort() {
         return environment.getProperty("local.server.port");
     }
-    public HttpResponse<String> post(String body, String accept, String contentType, String path) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .header("Accept", accept)
-                .header("Content-Type", contentType)
-                .uri(URI.create("http://localhost:" + getPort() + "/api/v1/" + path))
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString());
+
+    HttpResponse<String> request(
+            String method,
+            String path, // path是/user /session 这样的路径
+            String body,
+            Map<String, String> headers) throws IOException, InterruptedException {
+        var builder = HttpRequest.newBuilder(URI.create("http://localhost:" + getPort() + "/api/v1" + path))
+                .method(method, HttpRequest.BodyPublishers.ofString(body));
+
+        headers.forEach(builder::header);
+        if (!headers.containsKey("Content-Type")) {
+            builder.header("Content-Type", APPLICATION_JSON_VALUE);
+        }
+        if (!headers.containsKey("Accept")) {
+            builder.header("Accept", APPLICATION_JSON_VALUE);
+        }
+        return client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
     }
 
-    public HttpResponse<String> get(String path, String cookie) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .header("Accept", APPLICATION_JSON_VALUE)
-                .header("Cookie", cookie)
-                .uri(URI.create("http://localhost:" + getPort() + "/api/v1/" + path))
-                .build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> post(String path, // path是/user /session 这样的路径
+                              String accept,
+                              String contentType,
+                              String body) throws IOException, InterruptedException {
+        return post(path, body, Map.of("Accept", accept, "Content-Type", contentType));
     }
 
-    public HttpResponse<String> delete(String path, String cookie) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .header("Accept", APPLICATION_JSON_VALUE)
-                .header("Cookie", cookie)
-                .uri(URI.create("http://localhost:" + getPort() + "/api/v1/" + path))
-                .DELETE()
-                .build();
-        return client.send(request, HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> patch(String path, // path是/user /session 这样的路径
+                               String body,
+                               Map<String, String> headers) throws IOException, InterruptedException {
+        return request("PATCH", path, body, headers);
+    }
+
+    HttpResponse<String> post(String path, // path是/user /session 这样的路径
+                              String body,
+                              Map<String, String> headers) throws IOException, InterruptedException {
+        return request("POST", path, body, headers);
+    }
+
+    HttpResponse<String> get(String path) throws IOException, InterruptedException {
+        return request("GET", path, "{}", Map.of());
+    }
+
+    HttpResponse<String> get(String path, String cookie) throws IOException, InterruptedException {
+        return request("GET", path, "{}", Map.of("Cookie", cookie));
+    }
+
+    HttpResponse<String> getAssert200(String path, String cookie) throws IOException, InterruptedException {
+        var ret = request("GET", path, "{}", Map.of("Cookie", cookie));
+        Assertions.assertEquals(200, ret.statusCode());
+        return ret;
+    }
+
+    HttpResponse<String> delete(String path, String cookie) throws IOException, InterruptedException {
+        return request("DELETE", path, "{}", Map.of("Cookie", cookie));
     }
 }
