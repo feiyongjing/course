@@ -12,7 +12,7 @@ import java.util.Map;
 
 @ControllerAdvice
 public class ExceptionHandlingController {
-    private final ObjectMapper objectMapper=new ObjectMapper();
+    public static final  ObjectMapper objectMapper=new ObjectMapper();
 
     @ExceptionHandler({HttpException.class})
     public void handleException(HttpServletResponse response, HttpException e) throws IOException {
