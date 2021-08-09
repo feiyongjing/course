@@ -10,9 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -26,23 +23,13 @@ public class CourseController {
 
     @PatchMapping("/course/{id}")
     public Course updateCourse(@PathVariable("id") Integer id, @RequestBody Course course) {
-        Course courseInDb = courseDao.findById(id)
-                .orElseThrow(() -> new HttpException(404, "课程不存在！"));
-        courseInDb.setName(course.getName());
-        courseInDb.setDescription(course.getDescription());
-        courseInDb.setTeacher_name(course.getTeacher_name());
-        courseInDb.setTeacher_description(course.getTeacher_description());
-        courseInDb.setPrice(course.price);
-
-        return courseDao.saveAndFlush(courseInDb);
+        return courseService.updateCourse(id,course);
     }
 
     @PostMapping("/course")
     public Course createdCourse(@RequestBody Course course) {
-
         check(course);
-
-        return courseDao.save(course);
+        return courseService.createdCourse(course);
     }
 
     private void check(Course course) {
@@ -51,8 +38,12 @@ public class CourseController {
 
     @DeleteMapping("/course")
     public void deleteCourse(@RequestParam("id") Integer id, HttpServletResponse response) {
-        courseDao.deleteById(id);
-        response.setStatus(204);
+        courseService.deleteCourse(id,response);
+    }
+
+    @GetMapping("/course/{id}")
+    public Course getCourseById(@PathVariable("id") Integer id) {
+        return courseService.getCourseById(id);
     }
 
     @GetMapping("/course")

@@ -11,13 +11,12 @@ public class Role extends BaseEntity {
     private String name;
     private Set<Permission> permissions;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinTable(
             name = "permission",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "id")
     )
-    @JsonIgnore
     public Set<Permission> getPermissions() {
         return permissions;
     }

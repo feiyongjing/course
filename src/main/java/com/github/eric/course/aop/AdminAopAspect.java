@@ -1,4 +1,4 @@
-package com.github.eric.course.service;
+package com.github.eric.course.aop;
 
 import com.github.eric.course.configuration.UserContext;
 import com.github.eric.course.model.HttpException;

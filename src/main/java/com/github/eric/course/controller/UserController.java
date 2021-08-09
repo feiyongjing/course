@@ -185,13 +185,9 @@ public class UserController {
      *     }
      */
     /**
-     * @param id 用户ID
-     * @return 获得的用户
-     */
-    /**
      * 查看指定id的用户，需要管理员权限
-     *
-     * @return 用户信息
+     * @param userId 用户ID
+     * @return 获得的用户
      */
     @GetMapping("/user/{id}")
     public User getUserById(@PathVariable("id") Integer userId) {
