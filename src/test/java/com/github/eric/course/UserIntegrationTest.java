@@ -9,8 +9,9 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,7 +29,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
         User user = new User();
         Role role = new Role();
         role.setName("管理员");
-        user.setRoles(Collections.singletonList(role));
+        user.setRoles(Set.of(role));
         assertEquals(403, get("/user", pupilsUserCookie).statusCode());
         assertEquals(403, get("/user/1", pupilsUserCookie).statusCode());
         assertEquals(403, get("/user", teacherUserCookie).statusCode());
@@ -84,7 +85,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
         assertEquals(200, response.statusCode());
         user = objectMapper.readValue(response.body(), User.class);
         assertEquals("李四", user.getUsername());
-        assertEquals(List.of("教师", "管理员"), user.getRoles().stream().map(Role::getName).collect(toList()));
+        assertEquals(Set.of("教师", "管理员"), user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
 
         // 现在用户2也是管理员了，使用用户2带有管理员权限的Cookie访问只有管理员权限访问的数据
         assertEquals(200, get("/user/1", teacherUserCookie).statusCode());

@@ -18,6 +18,8 @@ import org.springframework.util.ObjectUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -44,11 +46,11 @@ public class UserRoleManagerService {
         User userInDb = findById(id);
 
         Map<String, Role> nameToRoles = roleDao.findAll().stream().collect(toMap(Role::getName, x -> x));
-        List<Role> newRoles = user.getRoles().stream()
+        Set<Role> newRoles = user.getRoles().stream()
                 .map(Role::getName)
                 .map(nameToRoles::get)
                 .filter(Objects::nonNull)
-                .collect(toList());
+                .collect(Collectors.toSet());
 
         userInDb.setRoles(newRoles);
         userDao.save(userInDb);

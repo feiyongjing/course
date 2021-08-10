@@ -3,14 +3,14 @@ package com.github.eric.course.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user", schema = "public")
 public class User extends BaseEntity{
     private String username;
     private String encrypted_password;
-    private List<Role> roles;
+    private Set<Role> roles;
 
     @ManyToMany(fetch= FetchType.EAGER)
     @JoinTable(
@@ -18,11 +18,11 @@ public class User extends BaseEntity{
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

@@ -12,10 +12,12 @@ CREATE TABLE course
 );
 
 INSERT INTO course(id, name, description, teacher_name, teacher_description, price)
-VALUES (1, '21天精通C++', '让你21天精通C++', 'Torvalds Linus', 'Creator of Linux', 10000);
+VALUES (1, '21天精通C++', '让你21天精通C++', 'Torvalds Linus', 'Creator of Linux', 10000),
+       (2, 'Java体系课', '从零开始学习Java', 'james gosling', 'Creator of Java', 8888),
+       (3, '前端体系课', '包含Html、Css、JavaScript基础', 'tim berners-lee', 'Creator of the World Wide Web', 9999);
 
 alter
-    sequence course_id_seq restart with 2;
+    sequence course_id_seq restart with 4;
 
 CREATE TABLE video
 (

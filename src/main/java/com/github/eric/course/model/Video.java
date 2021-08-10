@@ -11,8 +11,10 @@ import java.util.Objects;
 public class Video extends BaseEntity {
     public String name;
     public String description;
-//    public Integer course_id;
     private Course course;
+
+    public Video() {
+    }
 
     @JsonBackReference
     @ManyToOne(cascade={CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
@@ -43,14 +45,10 @@ public class Video extends BaseEntity {
         this.description = description;
     }
 
-//    @Column(name = "course_id")
-//    public Integer getCourse_id() {
-//        return course_id;
-//    }
-//
-//    public void setCourse_id(Integer course_id) {
-//        this.course_id = course_id;
-//    }
+    public Video(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     @Override
     public String toString() {
