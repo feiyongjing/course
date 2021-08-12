@@ -35,33 +35,28 @@ public class UserInterceptor implements HandlerInterceptor {
     }
 
     private boolean isWhitelist(HttpServletRequest request) {
-        String uri = request.getRequestURI();
+        String url = request.getRequestURI();
         String method = request.getMethod();
-//        List<String> releaseUrl = Arrays.asList(
-//                "/api/v1/code",
-//                "/api/v1/login",
-//                "/api/v1/session",
-//                "/api/v1/logout",
-//                "/error",
-//                "/",
-//                "/index.html",
-//                "/manifest.json"
-//        );
+        List<String> staticRequestUrl = Arrays.asList(
+                ".css",
+                ".js",
+                ".html",
+                ".ico"
+        );
         Map<String, List<String>> releaseMethodAndUrl = new HashMap<>();
-        releaseMethodAndUrl.put("GET", Arrays.asList("/api/v1/session"));
+        releaseMethodAndUrl.put("GET",
+                Arrays.asList("/api/v1/session","/index.html","/error","/api/v1/course/1/token"));
         releaseMethodAndUrl.put("POST", Arrays.asList("/api/v1/session", "/api/v1/user"));
         releaseMethodAndUrl.put("DELETE", Arrays.asList("/api/v1/session"));
-//        releaseMethodAndUrl.put("GET",Arrays.asList(""));
-//        releaseMethodAndUrl.put("GET",Arrays.asList(""));
 
 
-        if (uri.startsWith("/static/")) {
+        if (url.startsWith("/static/") || staticRequestUrl.stream().anyMatch(url::endsWith)) {
             return true;
         }
         if (!releaseMethodAndUrl.containsKey(method)) {
             return false;
         }
-        return releaseMethodAndUrl.get(method).contains(uri);
+        return releaseMethodAndUrl.get(method).contains(url);
     }
 
     @Override
