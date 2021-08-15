@@ -4,3 +4,8 @@ spring:
     username: root
     password: root
     driverClassName: org.postgresql.Driver
+oss:
+  accessKeyId: LTAI5tEqG1Sf2RZV4fZD2DoS
+  accessKeySecret: bGCQw5DRXJjR8Aniv2Ir44guRZRQsS
+  endpoint: oss-cn-beijing.aliyuncs.com
+  bucket: eric-cource

@@ -9,9 +9,19 @@ import java.util.Objects;
 @Entity
 @Table(name = "video", schema = "public")
 public class Video extends BaseEntity {
-    public String name;
-    public String description;
+    private String name;
+    private String description;
     private Course course;
+    private String video_url;
+
+    @Column(name = "video_url")
+    public String getVideo_url() {
+        return video_url;
+    }
+
+    public void setVideo_url(String video_url) {
+        this.video_url = video_url;
+    }
 
     public Video() {
     }

@@ -66,10 +66,10 @@ public class UserInterceptor implements HandlerInterceptor {
                 .flatMap(sessionDao::findByCookie)
                 .map(Session::getUser)
                 .ifPresent(UserContext::setCurrentUser);
-        if (UserContext.getCurrentUser() != null || isWhitelist(request)) {
+//        if (UserContext.getCurrentUser() != null || isWhitelist(request)) {
             return true;
-        }
-        throw new HttpException(401,"用户没有登录");
+//        }
+//        throw new HttpException(401,"用户没有登录");
     }
 
 

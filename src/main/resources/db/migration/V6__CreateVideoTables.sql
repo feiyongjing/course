@@ -25,6 +25,7 @@ CREATE TABLE video
     name        VARCHAR(100) NOT NULL,
     description TEXT,
     course_id   INT,
+    video_url   varchar(1000),
     created_at  TIMESTAMP    NOT NULL DEFAULT now(),
     updated_at  TIMESTAMP    NOT NULL DEFAULT now(),
     status      VARCHAR(10)  NOT NULL DEFAULT 'OK'

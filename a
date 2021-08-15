@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+  <Code>NoSuchBucket</Code>
+  <Message>The specified bucket does not exist.</Message>
+  <RequestId>6115BCABED63F0323848E1F0</RequestId>
+  <HostId>eric-course.oss-cn-beijing.aliyuncs.com</HostId>
+  <BucketName>eric-course</BucketName>
+</Error>

@@ -132,9 +132,9 @@ function set_upload_param(up, filename, ret)
     new_multipart_params = {
         'key' : g_object_name,
         'policy': policyBase64,
-        'OSSAccessKeyId': accessid, 
+        'OSSAccessKeyId': accessid,
         'success_action_status' : '200', //让服务端返回200,不然，默认会返回204
-        'callback' : callbackbody,
+        // 'callback' : callbackbody,
         'signature': signature,
     };
 
@@ -157,7 +157,7 @@ var uploader = new plupload.Uploader({
 
     filters: {
         mime_types : [ //只允许上传图片和zip文件
-        { title : "Image files", extensions : "jpg,gif,png,bmp,mp4" },
+        { title : "Image files", extensions : "mp4" },
         { title : "Zip files", extensions : "zip,rar" }
         ],
         max_file_size : '100mb', //最大只能上传10mb的文件

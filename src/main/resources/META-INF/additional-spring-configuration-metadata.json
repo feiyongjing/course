@@ -1,0 +1,34 @@
+{
+  "groups": [
+    {
+      "name": "oss",
+      "sourceType": "com.github.eric.course.configuration.OssConfig",
+      "type": "com.github.eric.course.configuration.OssConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "accessKeyId",
+      "sourceType": "com.github.eric.course.configuration.OssConfig",
+      "type": "java.lang.String",
+      "description": "Description for accessKeyId."
+    },
+    {
+      "name": "oss.accessKeySecret",
+      "sourceType": "com.github.eric.course.configuration.OssConfig",
+      "type": "java.lang.String",
+      "description": "Description for oss.accessKeySecret."
+    },
+    {
+      "name": "oss.endpoint",
+      "sourceType": "com.github.eric.course.configuration.OssConfig",
+      "type": "java.lang.String",
+      "description": "Description for oss.endpoint."
+    },
+    {
+      "name": "oss.bucket",
+      "sourceType": "com.github.eric.course.configuration.OssConfig",
+      "type": "java.lang.String",
+      "description": "Description for oss.bucket."
+    }
+  ] }
