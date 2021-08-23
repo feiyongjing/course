@@ -10,6 +10,17 @@ import java.util.Set;
 public class Role extends BaseEntity {
     private String name;
     private Set<Permission> permissions;
+    private Status status;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinTable(

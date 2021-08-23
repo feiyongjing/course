@@ -4,7 +4,6 @@ import com.github.eric.course.dao.SessionDao;
 import com.github.eric.course.model.HttpException;
 import com.github.eric.course.model.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -66,10 +65,10 @@ public class UserInterceptor implements HandlerInterceptor {
                 .flatMap(sessionDao::findByCookie)
                 .map(Session::getUser)
                 .ifPresent(UserContext::setCurrentUser);
-//        if (UserContext.getCurrentUser() != null || isWhitelist(request)) {
+        if (UserContext.getCurrentUser() != null || isWhitelist(request)) {
             return true;
-//        }
-//        throw new HttpException(401,"用户没有登录");
+        }
+        throw new HttpException(401,"用户没有登录");
     }
 
 

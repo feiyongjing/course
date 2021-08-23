@@ -13,6 +13,22 @@ public class Video extends BaseEntity {
     private String description;
     private Course course;
     private String video_url;
+    private Status status;
+
+    public Video(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     @Column(name = "video_url")
     public String getVideo_url() {
@@ -55,10 +71,6 @@ public class Video extends BaseEntity {
         this.description = description;
     }
 
-    public Video(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
 
     @Override
     public String toString() {

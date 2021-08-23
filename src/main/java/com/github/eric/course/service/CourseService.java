@@ -5,6 +5,7 @@ import com.github.eric.course.dao.CourseDao;
 import com.github.eric.course.model.Course;
 import com.github.eric.course.model.HttpException;
 import com.github.eric.course.model.PageResponse;
+import com.github.eric.course.model.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,13 +45,17 @@ public class CourseService {
     public Course createdCourse(Course course) {
         return courseDao.save(course);
     }
+
     @PermissionRequired(value = {"课程管理"})
     public void deleteCourse(Integer id, HttpServletResponse response) {
-        courseDao.deleteById(id);
+        Course courseInDb = courseDao.findById(id)
+                .orElseThrow(() -> new HttpException(404, "课程不存在！"));
+        courseInDb.setStatus(Status.DELETED);
+        courseDao.saveAndFlush(courseInDb);
         response.setStatus(204);
     }
 
-    public Course getCourseById(Integer id) {
-        return courseDao.findById(id).orElseThrow(() -> new HttpException(404, "课程不存在！"));
+    public Course getCourseById(Integer courseId) {
+        return courseDao.findByIdAndStatus(courseId, Status.OK).orElseThrow(() -> new HttpException(404, "课程不存在！"));
     }
 }

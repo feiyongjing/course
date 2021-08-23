@@ -5,7 +5,7 @@ create table "user"
     encrypted_password        varchar(100) not null,
     created_at timestamp not null default now(),
     updated_at timestamp not null default now(),
-    status varchar(10) not null default 'ok'
+    status varchar(10) not null default 'OK'
 );
 
 -- status 表示数据的状态 ok 和 deleted

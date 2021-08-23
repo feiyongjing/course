@@ -17,6 +17,17 @@ public class Course extends BaseEntity {
     private String teacher_description;
     private BigDecimal price;
     private List<Video> videos;
+    private Status status;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     @Column(name = "name")
     public String getName() {
@@ -80,17 +91,17 @@ public class Course extends BaseEntity {
         this.videos = videos;
     }
 
-    @Override
-    public String toString() {
-        return "Course{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", teacher_name='" + teacher_name + '\'' +
-                ", teacher_description='" + teacher_description + '\'' +
-                ", price=" + price +
-                ", videos=" + videos +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Course{" +
+//                "name='" + name + '\'' +
+//                ", description='" + description + '\'' +
+//                ", teacher_name='" + teacher_name + '\'' +
+//                ", teacher_description='" + teacher_description + '\'' +
+//                ", price=" + price +
+//                ", videos=" + videos +
+//                '}';
+//    }
 
     @Override
     public boolean equals(Object o) {

@@ -4,6 +4,7 @@ import com.github.eric.course.dao.CourseDao;
 import com.github.eric.course.model.Course;
 import com.github.eric.course.model.HttpException;
 import com.github.eric.course.model.PageResponse;
+import com.github.eric.course.model.Status;
 import com.github.eric.course.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -81,7 +82,6 @@ public class CourseController {
      * @apiParamExample Request-Example:
      *          POST /api/v1/course
      *          {
-     *             "id": 12345,
      *             "name": "21天精通C++",
      *             "teacherName": "Torvalds Linus",
      *             "teacherDescription": "Creator of Linux",
@@ -91,11 +91,11 @@ public class CourseController {
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
      *          {
-     *             "id": 12345,
-     *             "name": "21天精通C++",
-     *             "teacherName": "Torvalds Linus",
-     *             "teacherDescription": "Creator of Linux",
-     *             "price": 9900
+     *             "id": 4,
+     *             "name": "消息队列",
+     *             "teacherName": "老张",
+     *             "teacherDescription": "xxx员工",
+     *             "price": "333"
      *          }
      * @apiError 400 Bad Request 若请求中包含错误
      * @apiError 401 Unauthorized 若未登录
@@ -117,7 +117,8 @@ public class CourseController {
     }
 
     private void check(Course course) {
-
+        course.setVideos(null);
+        course.setStatus(Status.OK);
     }
 
     /**

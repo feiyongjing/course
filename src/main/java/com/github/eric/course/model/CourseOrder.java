@@ -1,33 +1,44 @@
 package com.github.eric.course.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "course_order", schema = "public")
 public class CourseOrder extends BaseEntity {
-    public Integer course_id;
-    public Integer user_id;
-    public BigDecimal price;
+    private Course course;
+    private User user;
+    private BigDecimal price;
+    private Status status;
 
-    @Column(name = "course_id")
-    public Integer getCourse_id() {
-        return course_id;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    public Status getStatus() {
+        return status;
     }
 
-    public void setCourse_id(Integer course_id) {
-        this.course_id = course_id;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
-    @Column(name = "user_id")
-    public Integer getUser_id() {
-        return user_id;
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
+    public Course getCourse() {
+        return course;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Column(name = "price")

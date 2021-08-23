@@ -1,0 +1,34 @@
+{
+  "alipay_trade_query_response": {
+    "code": "40004",
+    "msg": "Business Failed",
+    "sub_code": "ACQ.TRADE_NOT_EXIST",
+    "sub_msg": "交易不存在",
+    "buyer_pay_amount": "0.00",
+    "invoice_amount": "0.00",
+    "out_trade_no": "2",
+    "point_amount": "0.00",
+    "receipt_amount": "0.00"
+  },
+  "sign": "kXbtoxd4NWF0FbtRPdG1BPoSfIbvU9TTEV5fc2MAJBR2M/rsDFjbKuBkS8tBgmdkSgsid/e4hAZd2L5BN+EtgXKLOheJ7pe90rWQUgMIgrMHHXUhSa897JTjk1qyoiSc6QRTbOkf/t70DwvRmKU0xdKMEQgOiWPNLXw8583ey+BHugOzebqWGlYnRij1wu/E1y6V7O3uPErBRCowmjPEBFMoScwqgDaO3wDcu9t6DuqWjhzwXxreeB1HkqGSqBqGR/LslRcMhgZy5dzELQDe89nibMwOg7xN9lIUoIsso4vh6zOX3YyUwF34mLkInZqkc4VsliuysCuyZ1Hdm0xGEA=="
+}
+
+{
+  "alipay_trade_query_response": {
+    "code": "10000",
+    "msg": "Success",
+    "buyer_logon_id": "swn***@sandbox.com",
+    "buyer_pay_amount": "0.00",
+    "buyer_user_id": "2088622956402121",
+    "buyer_user_type": "PRIVATE",
+    "invoice_amount": "0.00",
+    "out_trade_no": "1",
+    "point_amount": "0.00",
+    "receipt_amount": "0.00",
+    "send_pay_date": "2021-08-19 17:18:30",
+    "total_amount": "99.00",
+    "trade_no": "2021081922001402120501875478",
+    "trade_status": "TRADE_SUCCESS"
+  },
+  "sign": "V2AjiXAiWZ28/UDu5AH16Gyz3BsONmOKS/IWFg7Jz7msNhawRt9YCMgCL7t54pLLgXwewSwzgL709F3m4d2COEEr2mHGPbod5qnloee8iYfqyqyXIlg5w/kiq7QDwJXiTuQT3e51xHGC1qTpDPBoVUNs4iNWQJfFmkuD5BYmA3pH6XhFo0IXqbSGagXauZssNfFcmlen0UZ7SXM4oNZxnEaTgN8MFz/vUjV2GjFWN3cfkm6IfYk5mQz26ja6ymyUsmjhZkwtSJuU43m5CnBssV8k9IUU+5WMfj8bANyuW+L3r2gMI/e3zH3YiXiGRccP5FaYQkLxc0nqGO5Z/Tp/lg=="
+}

@@ -11,6 +11,17 @@ public class User extends BaseEntity{
     private String username;
     private String encrypted_password;
     private Set<Role> roles;
+    private Status status;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     @ManyToMany(fetch= FetchType.EAGER)
     @JoinTable(

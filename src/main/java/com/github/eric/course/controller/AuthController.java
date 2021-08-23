@@ -7,6 +7,7 @@ import com.github.eric.course.dao.SessionDao;
 import com.github.eric.course.dao.UserDao;
 import com.github.eric.course.model.HttpException;
 import com.github.eric.course.model.Session;
+import com.github.eric.course.model.Status;
 import com.github.eric.course.model.User;
 import com.github.eric.course.service.UserRoleManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,6 +220,7 @@ public class AuthController {
         User user = new User();
         user.setUsername(username);
         user.setEncrypted_password(BCrypt.withDefaults().hashToString(12, password.toCharArray()));
+        user.setStatus(Status.OK);
         try {
             userDao.save(user);
         } catch (Throwable e) {

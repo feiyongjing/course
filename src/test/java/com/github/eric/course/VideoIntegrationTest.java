@@ -17,6 +17,7 @@ public class VideoIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void createdVideoSuccessTest() throws IOException, InterruptedException {
         Video video=new Video("21天精通C++ - 4", "21天精通C++ 第四集");
+        video.setVideo_url("cource-1/第03集.mp4");
         HttpResponse<String> response =post("/course/1/video",objectMapper.writeValueAsString(video), Map.of("Cookie", teacherUserCookie));
         assertEquals(200, response.statusCode());
 

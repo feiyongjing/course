@@ -1,0 +1,30 @@
+POST http://localhost:8080/api/v1/course
+Content-Type: application/json
+Cookie: COURSE_APP_SESSION_ID=teacher
+
+{
+  "name": "消息队列",
+  "description": "消息队列从入门到熟练",
+  "teacher_name": "老张",
+  "teacher_description": "xxx员工",
+  "price": "333",
+  "videos": [
+    {
+      "name": "消息队列 - 1",
+      "description": "消息队列 第一集",
+      "video_url": "cource-1/第01集.mp4"
+    },
+    {
+      "name": "消息队列 - 2",
+      "description": "消息队列 第二集",
+      "video_url": "cource-1/第02集.mp4"
+    },
+    {
+      "name": "消息队列 - 3",
+      "description": "消息队列 第三集",
+      "video_url": "cource-1/第03集.mp4"
+    }
+  ]
+}
+
+###

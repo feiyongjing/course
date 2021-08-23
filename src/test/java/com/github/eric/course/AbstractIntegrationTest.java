@@ -63,7 +63,7 @@ public class AbstractIntegrationTest {
             String path, // path是/user /session 这样的路径
             String body,
             Map<String, String> headers) throws IOException, InterruptedException {
-        var builder = HttpRequest.newBuilder(URI.create("http://localhost:" + getPort() + "/api/v1" + path))
+        HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create("http://localhost:" + getPort() + "/api/v1" + path))
                 .method(method, HttpRequest.BodyPublishers.ofString(body));
 
         headers.forEach(builder::header);
@@ -104,7 +104,7 @@ public class AbstractIntegrationTest {
     }
 
     HttpResponse<String> getAssert200(String path, String cookie) throws IOException, InterruptedException {
-        var ret = request("GET", path, "{}", Map.of("Cookie", cookie));
+        HttpResponse<String> ret = request("GET", path, "{}", Map.of("Cookie", cookie));
         Assertions.assertEquals(200, ret.statusCode());
         return ret;
     }
