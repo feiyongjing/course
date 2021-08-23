@@ -6,6 +6,7 @@ import com.github.eric.course.service.AlipayService;
 import com.github.eric.course.service.CourseOrderService;
 import com.github.eric.course.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +26,7 @@ public class OrderController {
     public CourseService courseService;
 
     /**
-     * @api {post} /api/v1/course/order 对指定课程下订单
+     * @api {post} /api/v1/course/order 创建订单
      * @apiName 对指定课程下订单
      * @apiGroup 订单支付管理
      * @apiDescription
@@ -62,7 +63,7 @@ public class OrderController {
      * @apiSuccess {CourseOrder} courseOrder 订单信息
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
-    {
+     *       {
      *             "id": 3,
      *             "course": {
      *                 "id": "2",
@@ -85,7 +86,7 @@ public class OrderController {
      *                 "username": "李四"
      *             },
      *             "status": "UNPAID"
-     *        }
+     *       }
      * @apiError 400 Bad Request 若请求中包含错误
      * @apiError 401 Unauthorized 若未登录
      * @apiError 403 Forbidden 无权给其他的用户下订单
@@ -124,7 +125,127 @@ public class OrderController {
     }
 
     /**
-     * @api {get} /api/v1/course/order/{id} 根据订单id查找订单
+     * @api {get} /api/v1/course/orders 获取个人订单列表
+     * @apiName 获取个人订单列表
+     * @apiGroup 订单支付管理
+     * @apiDescription
+     *   获取个人订单列表，以支付和未支付的都显示，删除的不显示
+     * @apiHeader {String} Accept application/json
+     * @apiParam {String} [search] 搜索courseName关键字
+     * @apiParam {Number} [pageSize] 每页包含多少个订单
+     * @apiParam {Number} [pageNum] 页码，从1开始
+     * @apiParam {String} [orderBy] 排序字段，如price/createdAt
+     * @apiParam {String} [orderType] 排序方法，Asc/Desc
+     *
+     * @apiParamExample Request-Example:
+     *            GET /api/v1/course/orders?pageSize=10&pageNum=1&orderBy=price&orderType=Desc
+     * @apiSuccess {Number} totalPage 总页数
+     * @apiSuccess {Number} pageNum 当前页码，从1开始
+     * @apiSuccess {Number} pageSize 每页包含多少个订单
+     * @apiSuccess {List[Course]} data 订单列表
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "totalPage": 1,
+     *       "pageSize": 10,
+     *       "pageNum": 1,
+     *       "data": [
+     *         {
+     *             "id": 1,
+     *             "course": {
+     *                 "id": "1",
+     *                 "name": "21天精通C++",
+     *                 "description": "让你21天精通C++",
+     *                 "teacher_name": "Torvalds Linus",
+     *                 "teacher_description": "Creator of Linux",
+     *                 "price": "10000",
+     *                 "videos": [
+     *                     {
+     *                         "id": "1",
+     *                         "name": "21天精通C++ - 1",
+     *                         "description": "21天精通C++ 第一集",
+     *                         "video_url": "cource-1/第01集.mp4"
+     *                     },
+     *                     {
+     *                         "id": "2",
+     *                         "name": "21天精通C++ - 2",
+     *                         "description": "21天精通C++ 第二集",
+     *                         "video_url": "cource-1/第02集.mp4"
+     *                     },
+     *                     {
+     *                         "id": "3",
+     *                         "name": "21天精通C++ - 3",
+     *                         "description": "21天精通C++ 第三集",
+     *                         "video_url": "cource-1/第03集.mp4"
+     *                     }
+     *                 ]
+     *             },
+     *             "user": {
+     *                 "id":"1",
+     *                 "username": "张三"
+     *             },
+     *             "status": "PAID"
+     *         }
+     *         {
+     *             "id": 2,
+     *             "course": {
+     *                 "id": "2",
+     *                 "name": "Java体系课",
+     *                 "description": "从零开始学习Java",
+     *                 "teacher_name": "james gosling",
+     *                 "teacher_description": "Creator of Java",
+     *                 "price": "8888",
+     *                 "videos": [
+     *                     {
+     *                         "id": "4",
+     *                         "name": "Java体系课 - 1",
+     *                         "description": "Java体系课 第一集",
+     *                         "video_url": "cource-1/第03集.mp4";
+     *                     }
+     *                 ]
+     *             },
+     *             "user": {
+     *                 "id":"1",
+     *                 "username": "张三"
+     *             },
+     *             "status": "UNPAID"
+     *         }
+     *       ]
+     *     }
+     * @apiError 400 Bad request 若请求中包含错误
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 400 Bad Request
+     *     {
+     *       "message": "Bad Request"
+     *     }
+     */
+    /**
+     * @return 订单列表详细信息
+     */
+    @GetMapping("/course/orders")
+    public PageResponse<CourseOrder> getCourseOrderByUserId(
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
+            @RequestParam(value = "pageNum", required = false) Integer pageNum,
+            @RequestParam(value = "orderBy", required = false) String orderBy,
+            @RequestParam(value = "orderType", required = false) String orderType
+    ) {
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        if (pageNum == null) {
+            pageNum = 1;
+        }
+        if (orderType != null && orderBy == null) {
+            throw new HttpException(400, "缺少orderBy!");
+        }
+        return courseOrderService.getUserAllCourseOrder(search, pageSize, pageNum, orderBy, orderType == null ? null : Sort.Direction.fromString(orderType));
+    }
+
+    /**
+     * @api {get} /api/v1/course/order/{id} 获取订单
      * @apiName 根据订单id查找订单
      * @apiGroup 订单支付管理
      * @apiDescription
@@ -195,7 +316,7 @@ public class OrderController {
     }
 
     /**
-     * @api {delete} /api/v1/course/order/{id} 根据订单id删除订单
+     * @api {delete} /api/v1/course/order/{id} 删除订单
      * @apiName 根据订单id删除订单
      * @apiGroup 订单支付管理
      * @apiDescription
